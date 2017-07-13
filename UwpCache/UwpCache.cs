@@ -1,5 +1,6 @@
 ﻿using JsonNet.PrivateSettersContractResolvers;
 using Newtonsoft.Json;
+using NeoSmart.Utils;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
