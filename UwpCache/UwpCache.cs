@@ -7,7 +7,7 @@ using Windows.Storage;
 
 namespace NeoSmart.UwpCache
 {
-    internal class Cache
+    public static class Cache
     {
         public static string CacheFolderName = "$UwpCache$";
         private static StorageFolder CacheFolder;
