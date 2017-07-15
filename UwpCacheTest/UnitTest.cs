@@ -150,5 +150,29 @@ namespace UwpCacheTest
                Assert.AreEqual(await Cache.GetAsync<int?>(key), null);
            });
         }
+
+        [TestMethod]
+        public void PlainTextKeyValidation()
+        {
+            var oldStyle = Cache.FileNameStyle;
+            Cache.FileNameStyle = KeyStyle.PlainText;
+
+            var illegalChars = System.IO.Path.GetInvalidFileNameChars();
+            if (illegalChars.Length == 0)
+            {
+                Assert.Fail("Cannot test plain text key validation on this platform.");
+                return;
+            }
+
+            Run(async () =>
+            {
+                var key = NewKey;
+                await Cache.SetAsync(key, 42);
+                await Cache.GetAsync<int>(key);
+                await Assert.ThrowsExceptionAsync<IllegalKeyException>(async () => await Cache.GetAsync<int>($"{illegalChars[0]}"));
+            });
+
+            Cache.FileNameStyle = oldStyle;
+        }
     }
 }

@@ -2,8 +2,10 @@
 using Newtonsoft.Json;
 using NeoSmart.Utils;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Collections.Generic;
 
 namespace NeoSmart.UwpCache
 {
@@ -17,6 +19,15 @@ namespace NeoSmart.UwpCache
         /// Sets the style used to convert keys to file names on-disk. Be careful to use only legal filename characters if KeyStyle is set to PlainText.
         /// </summary>
         public static KeyStyle FileNameStyle { get; set; } = KeyStyle.Hashed;
+
+        private static char[] IllegalCharacters;
+
+        static Cache()
+        {
+            var illegalChars = new List<char>(System.IO.Path.GetInvalidFileNameChars());
+            illegalChars.Sort();
+            IllegalCharacters = illegalChars.ToArray();
+        }
 
         private struct StorageTemplate<T>
         {
@@ -41,6 +52,10 @@ namespace NeoSmart.UwpCache
                 }
                 case KeyStyle.PlainText:
                 {
+                    if (key.ToCharArray().Any(c => Array.BinarySearch(IllegalCharacters, c) >= 0))
+                    {
+                        throw new IllegalKeyException();
+                    }
                     return key;
                 }
             }
