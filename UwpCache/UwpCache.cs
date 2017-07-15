@@ -47,9 +47,29 @@ namespace NeoSmart.UwpCache
             }
         }
 
+        public static async Task<T> GetAsync<T>(string key, T result, TimeSpan expiry, bool forceRefresh = false, bool cacheNull = false)
+        {
+            return await GetAsync(key, () => Task.FromResult(result), expiry, forceRefresh, cacheNull);
+        }
+
+        public static async Task<T> GetAsync<T>(string key, T result, DateTimeOffset? expiry = null, bool forceRefresh = false, bool cacheNull = false)
+        {
+            return await GetAsync(key, () => Task.FromResult(result), expiry, forceRefresh, cacheNull);
+        }
+
+        public static async Task<T> GetAsync<T>(string key, Func<T> generator, TimeSpan expiry, bool forceRefresh = false, bool cacheNull = false)
+        {
+            return await GetAsync(key, () => Task.FromResult(generator()), expiry, forceRefresh, cacheNull);
+        }
+
+        public static async Task<T> GetAsync<T>(string key, Func<T> generator, DateTimeOffset? expiry = null, bool forceRefresh = false, bool cacheNull = false)
+        {
+            return await GetAsync(key, () => Task.FromResult(generator()), expiry, forceRefresh, cacheNull);
+        }
+
         public static async Task<T> GetAsync<T>(string key, Func<Task<T>> generator, TimeSpan expiry, bool forceRefresh = false, bool cacheNull = false)
         {
-            return await GetAsync(key, generator, DateTimeOffset.UtcNow + expiry, forceRefresh);
+            return await GetAsync(key, generator, DateTimeOffset.UtcNow.Add(expiry), forceRefresh, cacheNull);
         }
 
         public static async Task<T> GetAsync<T>(string key, Func<Task<T>> generator, DateTimeOffset? expiry = null, bool forceRefresh = false, bool cacheNull = false)
@@ -81,6 +101,26 @@ namespace NeoSmart.UwpCache
             await SetAsync(key, generated, expiry, cacheNull);
 
             return generated;
+        }
+
+        public static async Task SetAsync<T>(string key, Func<Task<T>> generator, TimeSpan expiry, bool cacheNull = false)
+        {
+            await SetAsync(key, await generator(), DateTimeOffset.UtcNow.Add(expiry), cacheNull);
+        }
+
+        public static async Task SetAsync<T>(string key, Func<Task<T>> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
+        {
+            await SetAsync(key, await generator(), expiry, cacheNull);
+        }
+
+        public static async Task SetAsync<T>(string key, Func<T> generator, TimeSpan expiry, bool cacheNull = false)
+        {
+            await SetAsync(key, generator(), DateTimeOffset.UtcNow.Add(expiry), cacheNull);
+        }
+
+        public static async Task SetAsync<T>(string key, Func<T> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
+        {
+            await SetAsync(key, generator(), expiry, cacheNull);
         }
 
         public static async Task SetAsync<T>(string key, T value, TimeSpan expiry, bool cacheNull = false)
