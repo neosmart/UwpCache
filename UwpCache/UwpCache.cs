@@ -90,6 +90,8 @@ namespace NeoSmart.UwpCache
 
         public static async Task SetAsync<T>(string key, T value, DateTimeOffset? expiry = null, bool cacheNull = false)
         {
+            await Initialize();
+
             if (!cacheNull && value == null)
             {
                 return;
