@@ -13,6 +13,11 @@ namespace NeoSmart.UwpCache
         private static StorageFolder CacheFolder;
         public static TimeSpan DefaultLifetime = TimeSpan.FromDays(7);
 
+        /// <summary>
+        /// Sets the style used to convert keys to file names on-disk. Be careful to use only legal filename characters if KeyStyle is set to PlainText.
+        /// </summary>
+        public static KeyStyle FileNameStyle { get; set; } = KeyStyle.Hashed;
+
         private struct StorageTemplate<T>
         {
             public DateTimeOffset Expiry;
@@ -21,9 +26,26 @@ namespace NeoSmart.UwpCache
 
         private static string Hash(string key)
         {
-            var hash = Farmhash.Sharp.Farmhash.Hash64(key);
-            var bytes = BitConverter.GetBytes(hash);
-            return UrlBase64.Encode(bytes);
+            switch (FileNameStyle)
+            {
+                case KeyStyle.Hashed:
+                {
+                    var hash = Farmhash.Sharp.Farmhash.Hash64(key);
+                    var bytes = BitConverter.GetBytes(hash);
+                    return UrlBase64.Encode(bytes);
+                }
+                case KeyStyle.Base64:
+                {
+                    var bytes = System.Text.Encoding.UTF8.GetBytes(key);
+                    return UrlBase64.Encode(bytes);
+                }
+                case KeyStyle.PlainText:
+                {
+                    return key;
+                }
+            }
+
+            throw new Exception("Invalid key hashing style set!");
         }
 
         public static async Task Initialize()
