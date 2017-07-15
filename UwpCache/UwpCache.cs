@@ -56,8 +56,8 @@ namespace NeoSmart.UwpCache
         {
             await Initialize();
 
-            key = Hash(key);
-            var filename = $"{key}.json";
+            var hashed = Hash(key);
+            var filename = $"{hashed}.json";
 
             var file = (StorageFile)await CacheFolder.TryGetItemAsync(filename);
             if (file != null)
@@ -103,8 +103,9 @@ namespace NeoSmart.UwpCache
                 Value = value
             };
 
+            var hashed = Hash(key);
             var serialized = JsonConvert.SerializeObject(cached);
-            var file = await CacheFolder.CreateFileAsync($"{key}.json", CreationCollisionOption.ReplaceExisting);
+            var file = await CacheFolder.CreateFileAsync($"{hashed}.json", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, serialized);
         }
     }
