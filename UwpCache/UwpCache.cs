@@ -47,6 +47,11 @@ namespace NeoSmart.UwpCache
             }
         }
 
+        public static async Task<T> GetAsync<T>(string key)
+        {
+            return await GetAsync(key, (Func<T>)(() => throw new KeyNotFoundException(key)));
+        }
+
         public static async Task<T> GetAsync<T>(string key, T result, TimeSpan expiry, bool forceRefresh = false, bool cacheNull = false)
         {
             return await GetAsync(key, () => Task.FromResult(result), expiry, forceRefresh, cacheNull);
