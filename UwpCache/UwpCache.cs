@@ -34,6 +34,19 @@ namespace NeoSmart.UwpCache
             }
         }
 
+        /// <summary>
+        /// Clears the cache of all items.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task Clear()
+        {
+            await Initialize();
+            foreach (var child in await CacheFolder.GetItemsAsync())
+            {
+                await child.DeleteAsync();
+            }
+        }
+
         public static async Task<T> GetAsync<T>(string key, Func<Task<T>> generator, TimeSpan expiry, bool forceRefresh = false, bool cacheNull = false)
         {
             return await GetAsync(key, generator, DateTimeOffset.UtcNow + expiry, forceRefresh);
