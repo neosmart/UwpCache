@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26621.2
+VisualStudioVersion = 15.0.26711.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwpCache", "UwpCache\UwpCache.csproj", "{0091C2BF-9FF3-44ED-A44E-76301C100B1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwpCacheTest", "UwpCacheTest\UwpCacheTest.csproj", "{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,26 @@ Global
 		{0091C2BF-9FF3-44ED-A44E-76301C100B1B}.Release|x64.Build.0 = Release|x64
 		{0091C2BF-9FF3-44ED-A44E-76301C100B1B}.Release|x86.ActiveCfg = Release|x86
 		{0091C2BF-9FF3-44ED-A44E-76301C100B1B}.Release|x86.Build.0 = Release|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|ARM.Build.0 = Debug|ARM
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|x64.ActiveCfg = Debug|x64
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|x64.Build.0 = Debug|x64
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|x64.Deploy.0 = Debug|x64
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|x86.ActiveCfg = Debug|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|x86.Build.0 = Debug|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Debug|x86.Deploy.0 = Debug|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|Any CPU.ActiveCfg = Release|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|ARM.ActiveCfg = Release|ARM
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|ARM.Build.0 = Release|ARM
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|ARM.Deploy.0 = Release|ARM
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|x64.ActiveCfg = Release|x64
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|x64.Build.0 = Release|x64
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|x64.Deploy.0 = Release|x64
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|x86.ActiveCfg = Release|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|x86.Build.0 = Release|x86
+		{E683C4FD-6DBE-4B22-AA1F-D765BDF5C7CF}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
