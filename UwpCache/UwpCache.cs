@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NeoSmart.UwpCache
 {
@@ -125,6 +126,12 @@ namespace NeoSmart.UwpCache
             if (file != null)
             {
                 var json = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    Debug.Fail("found empty cache file on disk!");
+                    //this shouldn't be happening.
+                    //even a cached null value should have an expiry parameter there
+                }
 
                 var settings = new JsonSerializerSettings
                 {
@@ -140,7 +147,10 @@ namespace NeoSmart.UwpCache
 
             //don't have or cannot use cached value
             var generated = await generator();
-            await SetAsync(key, generated, expiry, cacheNull);
+            if (generated != null || cacheNull)
+            {
+                await SetAsync(key, generated, expiry, cacheNull);
+            }
 
             return generated;
         }
@@ -187,6 +197,7 @@ namespace NeoSmart.UwpCache
 
             var hashed = Hash(key);
             var serialized = JsonConvert.SerializeObject(cached);
+            Debug.Assert(!string.IsNullOrWhiteSpace(serialized));
             var file = await CacheFolder.CreateFileAsync($"{hashed}.json", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, serialized);
         }
