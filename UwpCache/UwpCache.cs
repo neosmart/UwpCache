@@ -12,8 +12,8 @@ namespace NeoSmart.UwpCache
 {
     public static class Cache
     {
-        public static string CacheFolderName = "$UwpCache$";
-        private static StorageFolder CacheFolder;
+        private const string CacheFolderName = "$UwpCache$";
+        public static Task<StorageFolder> CacheFolder = ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
         public static TimeSpan DefaultLifetime = TimeSpan.FromDays(7);
 
         /// <summary>
@@ -64,22 +64,13 @@ namespace NeoSmart.UwpCache
             throw new Exception("Invalid key hashing style set!");
         }
 
-        public static async Task Initialize()
-        {
-            if (CacheFolder == null)
-            {
-                CacheFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
-            }
-        }
-
         /// <summary>
         /// Clears the cache of all items.
         /// </summary>
         /// <returns></returns>
         public static async Task Clear()
         {
-            await Initialize();
-            foreach (var child in await CacheFolder.GetItemsAsync())
+            foreach (var child in await (await CacheFolder).GetItemsAsync())
             {
                 await child.DeleteAsync();
             }
@@ -87,10 +78,9 @@ namespace NeoSmart.UwpCache
 
         private static async Task<(bool Found, T Result)> TryGetHashAsync<T>(string keyHash)
         {
-            await Initialize();
             var filename = $"{keyHash}.json";
 
-            var file = (StorageFile)await CacheFolder.TryGetItemAsync(filename);
+            var file = (StorageFile)await (await CacheFolder).TryGetItemAsync(filename);
             if (file != null)
             {
                 var json = await FileIO.ReadTextAsync(file);
@@ -199,8 +189,6 @@ namespace NeoSmart.UwpCache
 
         public static async Task SetAsync<T>(string key, T value, DateTimeOffset? expiry = null, bool cacheNull = false)
         {
-            await Initialize();
-
             if (!cacheNull && value == null)
             {
                 return;
@@ -215,7 +203,7 @@ namespace NeoSmart.UwpCache
             var hashed = Hash(key);
             var serialized = JsonConvert.SerializeObject(cached);
             Debug.Assert(!string.IsNullOrWhiteSpace(serialized));
-            var file = await CacheFolder.CreateFileAsync($"{hashed}.json", CreationCollisionOption.ReplaceExisting);
+            var file = await (await CacheFolder).CreateFileAsync($"{hashed}.json", CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, serialized);
         }
     }
