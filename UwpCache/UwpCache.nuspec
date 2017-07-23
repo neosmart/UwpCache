@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>UwpCache</id>
-	<version>0.2.0.0</version>
+	<version>0.2.1.0</version>
     <authors>NeoSmart Technologies, Mahmoud Al-Qudsi</authors>
     <owners>NeoSmart Technologies</owners>
 	<licenseUrl>https://cdn.rawgit.com/neosmart/UwpCache/master/LICENSE</licenseUrl>
 	<projectUrl>https://github.com/neosmart/UwpCache</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An object data cache for your UWP apps.</description>
-    <releaseNotes>Nicer API, more features! See commit log for more info.</releaseNotes>
+    <releaseNotes>Improved safety checks, better null handling.</releaseNotes>
     <copyright>Copyright NeSmart Technologies 2017</copyright>
     <tags>uwp, uap, cache, data cache, object cache</tags>
     <dependencies>
