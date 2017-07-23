@@ -85,6 +85,44 @@ namespace NeoSmart.UwpCache
             }
         }
 
+        private static async Task<(bool Found, T Result)> TryGetHashAsync<T>(string keyHash)
+        {
+            await Initialize();
+            var filename = $"{keyHash}.json";
+
+            var file = (StorageFile)await CacheFolder.TryGetItemAsync(filename);
+            if (file != null)
+            {
+                var json = await FileIO.ReadTextAsync(file);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    //this shouldn't be happening.
+                    //even a cached null value should have an expiry parameter there
+
+                    Debug.Fail("found empty cache file on disk!");
+                    throw new Exception("Internal UwpCache exception: empty cache file found on disk!");
+                }
+
+                var settings = new JsonSerializerSettings
+                {
+                    ContractResolver = new PrivateSetterContractResolver()
+                };
+                var result = JsonConvert.DeserializeObject<StorageTemplate<T>>(json, settings);
+
+                if (result.Expiry > DateTimeOffset.UtcNow)
+                {
+                    return (true, result.Value);
+                }
+            }
+
+            return (false, default(T));
+        }
+
+        public static async Task<(bool Found, T Result)> TryGetAsync<T>(string key, Action<T> ifFound = null)
+        {
+            return await TryGetHashAsync<T>(Hash(key));
+        }
+
         public static async Task<T> GetAsync<T>(string key)
         {
             return await GetAsync(key, (Func<T>)(() => throw new KeyNotFoundException(key)));
@@ -117,32 +155,11 @@ namespace NeoSmart.UwpCache
 
         public static async Task<T> GetAsync<T>(string key, Func<Task<T>> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
         {
-            await Initialize();
-
             var hashed = Hash(key);
-            var filename = $"{hashed}.json";
-
-            var file = (StorageFile)await CacheFolder.TryGetItemAsync(filename);
-            if (file != null)
+            var lookupResult = await TryGetHashAsync<T>(hashed);
+            if (lookupResult.Found)
             {
-                var json = await FileIO.ReadTextAsync(file);
-                if (string.IsNullOrWhiteSpace(json))
-                {
-                    Debug.Fail("found empty cache file on disk!");
-                    //this shouldn't be happening.
-                    //even a cached null value should have an expiry parameter there
-                }
-
-                var settings = new JsonSerializerSettings
-                {
-                    ContractResolver = new PrivateSetterContractResolver()
-                };
-                var result = JsonConvert.DeserializeObject<StorageTemplate<T>>(json, settings);
-
-                if (result.Expiry > DateTimeOffset.UtcNow)
-                {
-                    return result.Value;
-                }
+                return lookupResult.Result;
             }
 
             //don't have or cannot use cached value
