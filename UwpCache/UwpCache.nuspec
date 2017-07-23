@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>UwpCache</id>
-	<version>0.2.1.0</version>
+	<version>0.3.0</version>
     <authors>NeoSmart Technologies, Mahmoud Al-Qudsi</authors>
     <owners>NeoSmart Technologies</owners>
 	<licenseUrl>https://cdn.rawgit.com/neosmart/UwpCache/master/LICENSE</licenseUrl>
