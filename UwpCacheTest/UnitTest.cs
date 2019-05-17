@@ -20,7 +20,7 @@ namespace UwpCacheTest
         {
            Run(async () =>
            {
-               await Cache.Clear();
+               await Cache.ClearAsync();
                await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await Cache.GetAsync<object>(NewKey), "Unexpectedly found object in cleared cache!");
            });
         }
@@ -32,7 +32,7 @@ namespace UwpCacheTest
            {
                var key = NewKey;
                await Cache.SetAsync(key, 42);
-               await Cache.Clear();
+               await Cache.ClearAsync();
                await Assert.ThrowsExceptionAsync<KeyNotFoundException>(async () => await Cache.GetAsync<object>(key), "Unexpectedly found object in cleared cache!");
            });
         }

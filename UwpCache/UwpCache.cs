@@ -68,7 +68,7 @@ namespace NeoSmart.UwpCache
         /// Clears the cache of all items.
         /// </summary>
         /// <returns></returns>
-        public static async Task Clear()
+        public static async Task ClearAsync()
         {
             foreach (var child in await (await CacheFolder).GetItemsAsync())
             {
