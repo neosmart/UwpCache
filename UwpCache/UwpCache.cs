@@ -162,36 +162,36 @@ namespace NeoSmart.UwpCache
             return generated;
         }
 
-        public static async Task SetAsync<T>(string key, Func<Task<T>> generator, TimeSpan expiry, bool cacheNull = false)
+        public static async Task<bool> SetAsync<T>(string key, Func<Task<T>> generator, TimeSpan expiry, bool cacheNull = false)
         {
-            await SetAsync(key, await generator(), DateTimeOffset.UtcNow.Add(expiry), cacheNull);
+            return await SetAsync(key, await generator(), DateTimeOffset.UtcNow.Add(expiry), cacheNull);
         }
 
-        public static async Task SetAsync<T>(string key, Func<Task<T>> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
+        public static async Task<bool> SetAsync<T>(string key, Func<Task<T>> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
         {
-            await SetAsync(key, await generator(), expiry, cacheNull);
+            return await SetAsync(key, await generator(), expiry, cacheNull);
         }
 
-        public static async Task SetAsync<T>(string key, Func<T> generator, TimeSpan expiry, bool cacheNull = false)
+        public static async Task<bool> SetAsync<T>(string key, Func<T> generator, TimeSpan expiry, bool cacheNull = false)
         {
-            await SetAsync(key, generator(), DateTimeOffset.UtcNow.Add(expiry), cacheNull);
+            return await SetAsync(key, generator(), DateTimeOffset.UtcNow.Add(expiry), cacheNull);
         }
 
-        public static async Task SetAsync<T>(string key, Func<T> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
+        public static async Task<bool> SetAsync<T>(string key, Func<T> generator, DateTimeOffset? expiry = null, bool cacheNull = false)
         {
-            await SetAsync(key, generator(), expiry, cacheNull);
+            return await SetAsync(key, generator(), expiry, cacheNull);
         }
 
-        public static async Task SetAsync<T>(string key, T value, TimeSpan expiry, bool cacheNull = false)
+        public static async Task<bool> SetAsync<T>(string key, T value, TimeSpan expiry, bool cacheNull = false)
         {
-            await SetAsync(key, value, DateTimeOffset.UtcNow.Add(expiry), cacheNull);
+            return await SetAsync(key, value, DateTimeOffset.UtcNow.Add(expiry), cacheNull);
         }
 
-        public static async Task SetAsync<T>(string key, T value, DateTimeOffset? expiry = null, bool cacheNull = false)
+        public static async Task<bool> SetAsync<T>(string key, T value, DateTimeOffset? expiry = null, bool cacheNull = false)
         {
             if (!cacheNull && value == null)
             {
-                return;
+                return false;
             }
 
             var cached = new StorageTemplate<T>
@@ -203,8 +203,22 @@ namespace NeoSmart.UwpCache
             var hashed = Hash(key);
             var serialized = JsonConvert.SerializeObject(cached);
             Debug.Assert(!string.IsNullOrWhiteSpace(serialized));
-            var file = await (await CacheFolder).CreateFileAsync($"{hashed}.json", CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteTextAsync(file, serialized);
+
+            try
+            {
+                var file = await (await CacheFolder).CreateFileAsync($"{hashed}.json", CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(file, serialized);
+            }
+            catch (System.IO.FileLoadException) // The file is in use
+            {
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
