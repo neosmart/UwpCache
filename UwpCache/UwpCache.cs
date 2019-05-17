@@ -89,7 +89,7 @@ namespace NeoSmart.UwpCache
                     //this shouldn't be happening.
                     //even a cached null value should have an expiry parameter there
 
-                    Debug.Fail("found empty cache file on disk!");
+                    Debug.Fail("Found empty cache file on disk!");
                     throw new Exception("Internal UwpCache exception: empty cache file found on disk!");
                 }
 
