@@ -1,4 +1,4 @@
-﻿using JsonNet.PrivateSettersContractResolvers;
+using JsonNet.PrivateSettersContractResolvers;
 using Newtonsoft.Json;
 using NeoSmart.Utils;
 using System;

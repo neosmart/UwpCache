@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoSmart.UwpCache;
 using System.Threading.Tasks;
