@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.Collections.Generic;
 using System.Diagnostics;
+using NeoSmart.Hashing.XXHash;
+using System.Buffers.Text;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace NeoSmart.UwpCache
 {
@@ -15,6 +20,7 @@ namespace NeoSmart.UwpCache
         private const string CacheFolderName = "$UwpCache$";
         public static Task<StorageFolder> CacheFolder = ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
         public static TimeSpan DefaultLifetime = TimeSpan.FromDays(7);
+        private static readonly Encoding DefaultEncoding = new UTF8Encoding(false);
 
         /// <summary>
         /// Sets the style used to convert keys to file names on-disk. Be careful to use only legal filename characters if KeyStyle is set to PlainText.
@@ -42,13 +48,16 @@ namespace NeoSmart.UwpCache
             {
                 case KeyStyle.Hashed:
                 {
-                    var hash = Farmhash.Sharp.Farmhash.Hash64(key);
-                    var bytes = BitConverter.GetBytes(hash);
-                    return UrlBase64.Encode(bytes);
+                    var hash = XXHash64.Hash(key);
+                    Span<byte> bytes = stackalloc byte[10];
+                    Utf8Formatter.TryFormat(hash, bytes, out var bytesWritten);
+                    // This requires netcoreapp3.1 or net5
+                    // return MemoryMarshal.AsRef<char>(bytes.Slice(0, bytesWritten)).ToString();
+                    return DefaultEncoding.GetString(bytes.Slice(0, bytesWritten).ToArray());
                 }
                 case KeyStyle.Base64:
                 {
-                    var bytes = System.Text.Encoding.UTF8.GetBytes(key);
+                    var bytes = DefaultEncoding.GetBytes(key);
                     return UrlBase64.Encode(bytes);
                 }
                 case KeyStyle.PlainText:
