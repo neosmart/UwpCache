@@ -1,5 +1,4 @@
 using JsonNet.PrivateSettersContractResolvers;
-using Newtonsoft.Json;
 using NeoSmart.Utils;
 using System;
 using System.Linq;
@@ -9,9 +8,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NeoSmart.Hashing.XXHash;
 using System.Buffers.Text;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using System.Text;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace NeoSmart.UwpCache
 {
@@ -21,6 +20,7 @@ namespace NeoSmart.UwpCache
         public static Task<StorageFolder> CacheFolder = ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
         public static TimeSpan DefaultLifetime = TimeSpan.FromDays(7);
         private static readonly Encoding DefaultEncoding = new UTF8Encoding(false);
+        private static readonly ILogger Logger = Log.ForContext(typeof(Cache));
 
         /// <summary>
         /// Sets the style used to convert keys to file names on-disk. Be careful to use only legal filename characters if KeyStyle is set to PlainText.
@@ -95,11 +95,11 @@ namespace NeoSmart.UwpCache
                 var json = await FileIO.ReadTextAsync(file);
                 if (string.IsNullOrWhiteSpace(json))
                 {
-                    //this shouldn't be happening.
-                    //even a cached null value should have an expiry parameter there
+                    // This indicates an IO failure (race condition during write, filesystem corruption, journal loss, etc)
+                    // Even a cached null value should have an expiry parameter there.
 
-                    Debug.Fail("Found empty cache file on disk!");
-                    throw new Exception("Internal UwpCache exception: empty cache file found on disk!");
+                    Logger.Error("Found empty cache file on disk for hash {CacheKeyHash}", keyHash);
+                    return (false, default);
                 }
 
                 var settings = new JsonSerializerSettings
@@ -161,7 +161,7 @@ namespace NeoSmart.UwpCache
                 return lookupResult.Result;
             }
 
-            //don't have or cannot use cached value
+            // Don't have or cannot use cached value
             var generated = await generator();
             if (generated != null || cacheNull)
             {
@@ -222,8 +222,9 @@ namespace NeoSmart.UwpCache
             {
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Error(ex, "Error creating/writing object cache for {CacheKey}", key);
                 return false;
             }
 
