@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30001.183
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwpCache", "UwpCache\UwpCache.csproj", "{0091C2BF-9FF3-44ED-A44E-76301C100B1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UwpCache", "UwpCache\UwpCache.csproj", "{0091C2BF-9FF3-44ED-A44E-76301C100B1B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UwpCacheTest", "UwpCacheTest\UwpCacheTest.csproj", "{B1960DD8-1B0B-450B-9C4C-1C774231CCF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheTest", "CacheTest\CacheTest.csproj", "{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,22 @@ Global
 		{B1960DD8-1B0B-450B-9C4C-1C774231CCF7}.Release|x86.ActiveCfg = Release|x86
 		{B1960DD8-1B0B-450B-9C4C-1C774231CCF7}.Release|x86.Build.0 = Release|x86
 		{B1960DD8-1B0B-450B-9C4C-1C774231CCF7}.Release|x86.Deploy.0 = Release|x86
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|x64.Build.0 = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Debug|x86.Build.0 = Debug|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|ARM.Build.0 = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|x64.ActiveCfg = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|x64.Build.0 = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|x86.ActiveCfg = Release|Any CPU
+		{6808AAFB-D9EF-47EC-9206-DC94DC59DC4D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
